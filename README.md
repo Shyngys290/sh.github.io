@@ -1,1 +1,2 @@
-# sh.github.io
+Boranbay Shyngys
+Dairabay Erasyl
