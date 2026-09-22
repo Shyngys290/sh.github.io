@@ -152,6 +152,38 @@
     font-size: 0.8rem;
   }
 
+  /* ===== Tabs ===== */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    max-width: 760px;
+    margin: 0 auto 18px;
+    padding: 0 0;
+  }
+  .tab-btn {
+    flex: 1;
+    background: var(--panel);
+    color: var(--muted);
+    border: 1px solid #334155;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .tab-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .tab-btn.active-tab {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #0f172a;
+    border-color: transparent;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active-panel { display: block; }
+
   #console-log {
     background: #020617;
     border-radius: 10px;
@@ -179,28 +211,33 @@
 <h1>DOM тапсырмалары</h1>
 <p class="subtitle">Task 1 — элементтермен жұмыс · Task 2 — кластарды басқару</p>
 
+<div class="tabs">
+  <button class="tab-btn active-tab" id="tab-btn-1" onclick="switchTab(1)">1-тапсырма</button>
+  <button class="tab-btn" id="tab-btn-2" onclick="switchTab(2)">2-тапсырма</button>
+</div>
+
 <div class="wrap">
 
   <!-- ================= TASK 1 ================= -->
-  <section class="card">
+  <section class="card tab-panel active-panel" id="tab-panel-1">
     <h2>1-тапсырма. Элементтермен жұмыс</h2>
 
     <div class="task-item">
       <div class="label">1) ID бойынша элементті табу және мәтінін өзгерту</div>
       <div id="target-element">Бастапқы мәтін (өзгертілмеген)</div>
-      <button onclick="task1_changeTextById()">Мәтінді өзгерту</button>
+      <button onclick="task1_changeTextById(this)">Мәтінді өзгерту</button>
     </div>
 
     <div class="task-item">
       <div class="label">2) Жаңа &lt;div class="new-div"&gt; жасап, body соңына қосу</div>
-      <button onclick="task1_appendNewDiv()">Жаңа div қосу</button>
+      <button onclick="task1_appendNewDiv(this)">Жаңа div қосу</button>
       <div class="label" style="margin-top:10px;">↓ жаңа элемент body соңында пайда болады (беттің төменінде)</div>
     </div>
 
     <div class="task-item">
       <div class="label">3) old-element класымен элементті жою</div>
       <div class="old-element" id="old-element-demo">Мен old-element класымын — мені жоюға болады</div>
-      <button onclick="task1_removeOldElement()" style="margin-top:10px;">old-element жою</button>
+      <button onclick="task1_removeOldElement(this)" style="margin-top:10px;">old-element жою</button>
     </div>
 
     <div class="task-item">
@@ -210,13 +247,13 @@
   </section>
 
   <!-- ================= TASK 2 ================= -->
-  <section class="card">
+  <section class="card tab-panel" id="tab-panel-2">
     <h2>2-тапсырма. Элемент кластарын басқару</h2>
 
     <div class="task-item">
       <div class="label">1) "active" класын қосу / болса — жою (toggle)</div>
       <div class="toggle-element" id="toggle-active-demo">Мен toggle элементпін</div>
-      <button onclick="task2_toggleActive()" style="margin-top:10px;">active toggle</button>
+      <button onclick="task2_toggleActive(this)" style="margin-top:10px;">active toggle</button>
     </div>
 
     <div class="task-item">
@@ -225,11 +262,11 @@
         Бұл элементте бірнеше класс бар
       </div>
       <p>Мен осы блоктың жанындағы бөлек &lt;p&gt; тегімін</p>
-      <button onclick="task2_logClasses()">Кластарды консольге шығару</button>
+      <button onclick="task2_logClasses(this)">Кластарды консольге шығару</button>
     </div>
   </section>
 
-  <!-- ON-PAGE CONSOLE (қосымша, көрнекілік үшін) -->
+  <!-- ON-PAGE CONSOLE (қосымша, көрнекілік үшін, екі табта да көрінеді) -->
   <section class="card">
     <h2>Консоль (браузердің DevTools консолін де ашып қараңыз — F12)</h2>
     <div id="console-log"><div class="line muted">// нәтижелер осында да көрсетіледі</div></div>
@@ -237,6 +274,7 @@
 
 </div>
 
+<footer>Таза HTML + CSS + JavaScript (кітапханасыз). GitHub-қа жүктеуге дайын.</footer>
 
 <script>
 /* =========================================================
@@ -253,29 +291,52 @@ function logToScreen(msg) {
 }
 
 /* =========================================================
+   Табтарды ауыстыру (1-тапсырма / 2-тапсырма)
+   ========================================================= */
+function switchTab(num) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active-panel'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+  document.getElementById('tab-panel-' + num).classList.add('active-panel');
+  document.getElementById('tab-btn-' + num).classList.add('active-tab');
+}
+
+// Бір рет басылғаннан кейін түймені өшіріп, экраннан жоғалту
+function disableButtonAfterUse(btn) {
+  if (!btn) return;
+  btn.disabled = true;
+  btn.style.opacity = '0';
+  btn.style.transform = 'scale(.8)';
+  btn.style.pointerEvents = 'none';
+  btn.style.transition = 'opacity .3s ease, transform .3s ease';
+  setTimeout(() => { btn.style.display = 'none'; }, 300);
+}
+
+/* =========================================================
    TASK 1
    ========================================================= */
 
 // 1) ID бойынша элементті тауып, мәтінін өзгерту
-function task1_changeTextById() {
+function task1_changeTextById(btn) {
   const el = document.getElementById('target-element');
   if (el) {
     el.textContent = 'Сәлем, әлем!';
     logToScreen('Task1: #target-element мәтіні "Сәлем, әлем!" болып өзгерді');
   }
+  disableButtonAfterUse(btn);
 }
 
 // 2) new-div класымен жаңа элемент жасап, body соңына қосу
-function task1_appendNewDiv() {
+function task1_appendNewDiv(btn) {
   const newDiv = document.createElement('div');
   newDiv.className = 'new-div';
   newDiv.textContent = 'Мен жаңа элементпін';
   document.body.appendChild(newDiv);
   logToScreen('Task1: жаңа <div class="new-div"> body соңына қосылды');
+  disableButtonAfterUse(btn);
 }
 
 // 3) old-element класы бар элементті жою
-function task1_removeOldElement() {
+function task1_removeOldElement(btn) {
   const el = document.querySelector('.old-element');
   if (el) {
     el.remove();
@@ -283,6 +344,7 @@ function task1_removeOldElement() {
   } else {
     logToScreen('Task1: .old-element табылмады (бұрын жойылған болуы мүмкін)');
   }
+  disableButtonAfterUse(btn);
 }
 
 // 4) "Бұл ауыспалы абзац" — басқанда стиль өзгереді (текст пен фонттың түсі/өлшемі)
@@ -297,7 +359,9 @@ toggleParagraph.addEventListener('click', function () {
    ========================================================= */
 
 // 1) active класын қосу, ал ол бар болса — жою (toggle)
-function task2_toggleActive() {
+// Бар болғаны 2 рет басуға болады, содан кейін кнопка жоғалады
+let toggleActiveClickCount = 0;
+function task2_toggleActive(btn) {
   const el = document.getElementById('toggle-active-demo');
   const hasActive = el.classList.contains('active');
   el.classList.toggle('active');
@@ -306,11 +370,16 @@ function task2_toggleActive() {
       ? 'Task2: "active" класы жойылды'
       : 'Task2: "active" класы қосылды'
   );
+
+  toggleActiveClickCount++;
+  if (toggleActiveClickCount >= 2) {
+    disableButtonAfterUse(btn);
+  }
 }
 
 // 2) Барлық элемент кластарының тізімін консольге шығару
 //    + жанындағы бөлек <p> тегін де шығару
-function task2_logClasses() {
+function task2_logClasses(btn) {
   const el = document.getElementById('classes-demo');
   const classList = Array.from(el.classList);
   logToScreen('Task2: элемент кластары -> [' + classList.join(', ') + ']');
@@ -325,6 +394,7 @@ function task2_logClasses() {
   }
 
   console.log('Барлық класс тізімі (массив):', classList);
+  disableButtonAfterUse(btn);
 }
 </script>
 
