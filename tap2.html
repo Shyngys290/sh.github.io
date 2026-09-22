@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOM тапсырмалары — Task 1 & Task 2</title>
+<style>
+  :root{
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-light: #273449;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --ok: #34d399;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, var(--bg), #111827);
+    color: var(--text);
+    padding: 32px 16px 80px;
+    line-height: 1.5;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-size: 0.95rem;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  section.card {
+    background: var(--panel);
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  }
+  section.card h2 {
+    margin-top: 0;
+    font-size: 1.15rem;
+    color: var(--accent);
+    border-bottom: 1px solid #334155;
+    padding-bottom: 10px;
+  }
+  .task-item {
+    background: var(--panel-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .task-item:last-child { margin-bottom: 0; }
+  .task-item .label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  button {
+    background: var(--accent);
+    color: #0f172a;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: transform .1s ease, background .2s ease;
+  }
+  button:hover { background: #7dd3fc; }
+  button:active { transform: scale(.96); }
+  button.secondary {
+    background: var(--accent2);
+  }
+  button.secondary:hover { background: #c4b5fd; }
+
+  #target-element {
+    font-size: 1.05rem;
+    padding: 10px 12px;
+    background: #0f172a;
+    border-radius: 8px;
+    border: 1px dashed #475569;
+  }
+  .old-element {
+    background: #7f1d1d;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #fecaca;
+  }
+  .new-div {
+    background: #064e3b;
+    color: #a7f3d0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  #toggle-paragraph {
+    cursor: pointer;
+    padding: 10px 12px;
+    background: #0f172a;
+    border-radius: 8px;
+    border: 1px dashed #475569;
+    color: var(--text);
+    font-size: 1rem;
+    transition: color .2s ease, font-size .2s ease;
+    user-select: none;
+  }
+  #toggle-paragraph.styled {
+    color: #fbbf24;
+    font-size: 1.3rem;
+  }
+  .toggle-element {
+    padding: 10px 12px;
+    background: #0f172a;
+    border-radius: 8px;
+    border: 1px dashed #475569;
+    transition: box-shadow .2s ease, border-color .2s ease;
+  }
+  .toggle-element.active {
+    border-color: var(--ok);
+    box-shadow: 0 0 0 2px rgba(52,211,153,.25);
+    color: var(--ok);
+  }
+  .extra-class-demo {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .extra-class-demo span {
+    background: #334155;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+  }
+
+  #console-log {
+    background: #020617;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.85rem;
+    color: #86efac;
+    max-height: 220px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    border: 1px solid #1e293b;
+  }
+  #console-log .line { margin-bottom: 4px; }
+  #console-log .line.muted { color: var(--muted); }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<h1>DOM тапсырмалары</h1>
+<p class="subtitle">Task 1 — элементтермен жұмыс · Task 2 — кластарды басқару</p>
+
+<div class="wrap">
+
+  <!-- ================= TASK 1 ================= -->
+  <section class="card">
+    <h2>1-тапсырма. Элементтермен жұмыс</h2>
+
+    <div class="task-item">
+      <div class="label">1) ID бойынша элементті табу және мәтінін өзгерту</div>
+      <div id="target-element">Бастапқы мәтін (өзгертілмеген)</div>
+      <button onclick="task1_changeTextById()">Мәтінді өзгерту</button>
+    </div>
+
+    <div class="task-item">
+      <div class="label">2) Жаңа &lt;div class="new-div"&gt; жасап, body соңына қосу</div>
+      <button onclick="task1_appendNewDiv()">Жаңа div қосу</button>
+      <div class="label" style="margin-top:10px;">↓ жаңа элемент body соңында пайда болады (беттің төменінде)</div>
+    </div>
+
+    <div class="task-item">
+      <div class="label">3) old-element класымен элементті жою</div>
+      <div class="old-element" id="old-element-demo">Мен old-element класымын — мені жоюға болады</div>
+      <button onclick="task1_removeOldElement()" style="margin-top:10px;">old-element жою</button>
+    </div>
+
+    <div class="task-item">
+      <div class="label">4) "Бұл ауыспалы абзац" — басқанда түс/өлшем өзгереді</div>
+      <p id="toggle-paragraph">Бұл ауыспалы абзац</p>
+    </div>
+  </section>
+
+  <!-- ================= TASK 2 ================= -->
+  <section class="card">
+    <h2>2-тапсырма. Элемент кластарын басқару</h2>
+
+    <div class="task-item">
+      <div class="label">1) "active" класын қосу / болса — жою (toggle)</div>
+      <div class="toggle-element" id="toggle-active-demo">Мен toggle элементпін</div>
+      <button onclick="task2_toggleActive()" style="margin-top:10px;">active toggle</button>
+    </div>
+
+    <div class="task-item">
+      <div class="label">2) Барлық элемент кластарын консольге шығару + жақын &lt;p&gt; тегі</div>
+      <div class="extra-class-demo card-item highlight" id="classes-demo">
+        Бұл элементте бірнеше класс бар
+      </div>
+      <p>Мен осы блоктың жанындағы бөлек &lt;p&gt; тегімін</p>
+      <button onclick="task2_logClasses()">Кластарды консольге шығару</button>
+    </div>
+  </section>
+
+  <!-- ON-PAGE CONSOLE (қосымша, көрнекілік үшін) -->
+  <section class="card">
+    <h2>Консоль (браузердің DevTools консолін де ашып қараңыз — F12)</h2>
+    <div id="console-log"><div class="line muted">// нәтижелер осында да көрсетіледі</div></div>
+  </section>
+
+</div>
+
+
+<script>
+/* =========================================================
+   Кішкентай көмекші: экрандағы консольге де жазу
+   ========================================================= */
+function logToScreen(msg) {
+  const box = document.getElementById('console-log');
+  const line = document.createElement('div');
+  line.className = 'line';
+  line.textContent = msg;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+  console.log(msg);
+}
+
+/* =========================================================
+   TASK 1
+   ========================================================= */
+
+// 1) ID бойынша элементті тауып, мәтінін өзгерту
+function task1_changeTextById() {
+  const el = document.getElementById('target-element');
+  if (el) {
+    el.textContent = 'Сәлем, әлем!';
+    logToScreen('Task1: #target-element мәтіні "Сәлем, әлем!" болып өзгерді');
+  }
+}
+
+// 2) new-div класымен жаңа элемент жасап, body соңына қосу
+function task1_appendNewDiv() {
+  const newDiv = document.createElement('div');
+  newDiv.className = 'new-div';
+  newDiv.textContent = 'Мен жаңа элементпін';
+  document.body.appendChild(newDiv);
+  logToScreen('Task1: жаңа <div class="new-div"> body соңына қосылды');
+}
+
+// 3) old-element класы бар элементті жою
+function task1_removeOldElement() {
+  const el = document.querySelector('.old-element');
+  if (el) {
+    el.remove();
+    logToScreen('Task1: .old-element элементі жойылды');
+  } else {
+    logToScreen('Task1: .old-element табылмады (бұрын жойылған болуы мүмкін)');
+  }
+}
+
+// 4) "Бұл ауыспалы абзац" — басқанда стиль өзгереді (текст пен фонттың түсі/өлшемі)
+const toggleParagraph = document.getElementById('toggle-paragraph');
+toggleParagraph.addEventListener('click', function () {
+  this.classList.toggle('styled');
+  logToScreen('Task1: абзац стилі ауыстырылды (түс/қаріп өлшемі)');
+});
+
+/* =========================================================
+   TASK 2
+   ========================================================= */
+
+// 1) active класын қосу, ал ол бар болса — жою (toggle)
+function task2_toggleActive() {
+  const el = document.getElementById('toggle-active-demo');
+  const hasActive = el.classList.contains('active');
+  el.classList.toggle('active');
+  logToScreen(
+    hasActive
+      ? 'Task2: "active" класы жойылды'
+      : 'Task2: "active" класы қосылды'
+  );
+}
+
+// 2) Барлық элемент кластарының тізімін консольге шығару
+//    + жанындағы бөлек <p> тегін де шығару
+function task2_logClasses() {
+  const el = document.getElementById('classes-demo');
+  const classList = Array.from(el.classList);
+  logToScreen('Task2: элемент кластары -> [' + classList.join(', ') + ']');
+
+  // жақын арадағы бөлек <p> тегін табу (келесі "sibling" элемент)
+  const nearbyP = el.nextElementSibling;
+  if (nearbyP && nearbyP.tagName === 'P') {
+    logToScreen('Task2: жақын <p> тегінің мәтіні -> "' + nearbyP.textContent + '"');
+    console.log('Жақын <p> элементі:', nearbyP);
+  } else {
+    logToScreen('Task2: жақын жерден <p> тегі табылмады');
+  }
+
+  console.log('Барлық класс тізімі (массив):', classList);
+}
+</script>
+
+</body>
+</html>
