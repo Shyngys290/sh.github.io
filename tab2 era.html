@@ -324,7 +324,7 @@
       <div class="extra-class-demo card-item highlight" id="classes-demo">
         Бұл элементте бірнеше класс бар
       </div>
-      <p>Мен осы блоктың жанындағы бөлек &lt;p&gt; тегімін</p>
+      <p id="nearby-p-demo">Мен осы блоктың жанындағы бөлек &lt;p&gt; тегімін</p>
       <button onclick="task2_logClasses(this)">Кластарды консольге шығару</button>
     </div>
   </section>
@@ -436,8 +436,7 @@ toggleParagraph.addEventListener('click', function () {
    ========================================================= */
 
 // 1) active класын қосу, ал ол бар болса — жою (toggle)
-// Бар болғаны 2 рет басуға болады, содан кейін кнопка жоғалады
-let toggleActiveClickCount = 0;
+// Кнопка ешқашан жоғалмайды, шексіз рет басуға болады.
 function task2_toggleActive(btn) {
   const el = document.getElementById('toggle-active-demo');
   const hasActive = el.classList.contains('active');
@@ -448,9 +447,10 @@ function task2_toggleActive(btn) {
       : 'Task2: "active" класы қосылды'
   );
 
-  toggleActiveClickCount++;
-  if (toggleActiveClickCount >= 2) {
-    disableButtonAfterUse(btn);
+  const classList = Array.from(el.classList);
+  const nearbyP = document.getElementById('nearby-p-demo');
+  if (nearbyP) {
+    nearbyP.textContent = 'Кластар: [' + classList.join(', ') + ']';
   }
 }
 
