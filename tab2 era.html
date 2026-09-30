@@ -267,6 +267,144 @@
     font-size: 0.8rem;
     margin-top: 30px;
   }
+
+  /* ===== Қосымша түстер (3 және 4 табтар) ===== */
+  :root {
+    --t3: #a3e635;
+    --t3-glow: rgba(163,230,53,.5);
+    --t3-dark: #1a2e05;
+    --t4: #a78bfa;
+    --t4-glow: rgba(167,139,250,.55);
+    --t4-dark: #2e1065;
+    --cell-bg: rgba(255,255,255,.05);
+    --cell-border: rgba(255,255,255,.22);
+    --console-bg: rgba(0,0,0,.5);
+    --card-bg: rgba(255,255,255,.045);
+    --item-bg: rgba(255,255,255,.035);
+  }
+  .tabs { flex-wrap: wrap; }
+  .tab-btn { min-width: 120px; }
+  body.mood-3 { background: radial-gradient(circle at 20% 0%, var(--t3-dark), transparent 60%), #05060a; }
+  body.mood-4 { background: radial-gradient(circle at 80% 0%, var(--t4-dark), transparent 60%), #05060a; }
+
+  #tab-panel-3 { border-color: var(--t3-glow); box-shadow: 0 0 0 1px var(--t3-glow) inset, 0 20px 60px rgba(163,230,53,.12); }
+  #tab-panel-3 h2 { color: var(--t3); }
+  #tab-panel-3 h2::before { background: var(--t3); box-shadow: 0 0 12px var(--t3-glow); }
+  #tab-panel-3 button { border-color: var(--t3); color: var(--t3); }
+  #tab-panel-3 button:hover:not(:disabled) { background: var(--t3); color: #05060a; box-shadow: 0 0 22px var(--t3-glow); }
+
+  #tab-panel-4 { border-color: var(--t4-glow); box-shadow: 0 0 0 1px var(--t4-glow) inset, 0 20px 60px rgba(167,139,250,.15); }
+  #tab-panel-4 h2 { color: var(--t4); }
+  #tab-panel-4 h2::before { background: var(--t4); box-shadow: 0 0 12px var(--t4-glow); }
+
+  #tab-btn-3.active-tab { background: var(--t3); color: #05060a; border-color: transparent; box-shadow: 0 0 26px var(--t3-glow); }
+  #tab-btn-4.active-tab { background: var(--t4); color: #05060a; border-color: transparent; box-shadow: 0 0 26px var(--t4-glow); }
+
+  /* ===== Task 3: кесте ===== */
+  .controls-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 4px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 0.74rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  input[type="number"], select {
+    background: var(--cell-bg);
+    color: var(--ink);
+    border: 1px solid var(--t3-glow);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 120px;
+    font-family: inherit;
+  }
+  select { width: 160px; }
+  select option { background: #111827; color: #f8fafc; }
+  input[type="number"]:focus, select:focus { outline: 2px solid var(--t3); }
+
+  .palette { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  #tab-panel-3 .swatch {
+    width: 34px; height: 34px; padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--cell-border);
+    background: var(--cell-bg);
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  #tab-panel-3 .swatch:hover:not(:disabled) { background: var(--cell-bg); color: var(--muted); box-shadow: none; }
+  #tab-panel-3 .swatch.selected { outline: 3px solid var(--t3); outline-offset: 3px; }
+
+  #table-container { overflow-x: auto; margin-top: 14px; }
+  #table-container .placeholder { color: var(--muted); font-size: 0.9rem; }
+  .grid-table { border-collapse: separate; border-spacing: 5px; margin: 0 auto; }
+  .grid-table td {
+    width: 46px; height: 40px;
+    background: var(--cell-bg);
+    border: 1px solid var(--cell-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .15s ease, transform .1s ease, box-shadow .15s ease;
+  }
+  .grid-table td:hover { transform: scale(1.08); border-color: var(--t3); box-shadow: 0 0 14px var(--t3-glow); }
+  .result-box {
+    margin-top: 12px;
+    padding: 11px 14px;
+    background: rgba(163,230,53,.08);
+    border: 1px solid var(--t3-glow);
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  /* ===== Task 4: ауыстырғыш ===== */
+  .switch-row { display: flex; align-items: center; gap: 14px; font-weight: 600; }
+  .switch { position: relative; display: inline-block; width: 60px; height: 32px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: rgba(255,255,255,.18); border-radius: 32px; cursor: pointer; transition: background .25s ease, box-shadow .25s ease; }
+  .slider::before { content: ""; position: absolute; width: 24px; height: 24px; left: 4px; top: 4px; background: #fff; border-radius: 50%; transition: transform .25s ease; }
+  .switch input:checked + .slider { background: var(--t4); box-shadow: 0 0 18px var(--t4-glow); }
+  .switch input:checked + .slider::before { transform: translateX(28px); }
+  .theme-fab {
+    position: fixed; top: 14px; right: 14px;
+    width: 44px; height: 44px; padding: 0;
+    border-radius: 50%; font-size: 1.1rem; z-index: 10;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* ===== Жарық тақырып (light) ===== */
+  :root[data-theme="light"] {
+    --t1: #0891b2; --t1-glow: rgba(8,145,178,.45); --t1-dark: #cffafe;
+    --t2: #db2777; --t2-glow: rgba(219,39,119,.4);  --t2-dark: #fce7f3;
+    --t3: #4d7c0f; --t3-glow: rgba(77,124,15,.4);   --t3-dark: #ecfccb;
+    --t4: #7c3aed; --t4-glow: rgba(124,58,237,.4);  --t4-dark: #ede9fe;
+    --ink: #0f172a;
+    --muted: #475569;
+    --ok: #15803d;
+    --cell-bg: rgba(255,255,255,.8);
+    --cell-border: rgba(15,23,42,.25);
+    --card-bg: rgba(255,255,255,.65);
+    --item-bg: rgba(255,255,255,.6);
+  }
+  [data-theme="light"] body { background: #f1f5f9; }
+  [data-theme="light"] body.mood-1 { background: radial-gradient(circle at 20% 0%, var(--t1-dark), transparent 60%), #f8fafc; }
+  [data-theme="light"] body.mood-2 { background: radial-gradient(circle at 80% 0%, var(--t2-dark), transparent 60%), #f8fafc; }
+  [data-theme="light"] body.mood-3 { background: radial-gradient(circle at 20% 0%, var(--t3-dark), transparent 60%), #f8fafc; }
+  [data-theme="light"] body.mood-4 { background: radial-gradient(circle at 80% 0%, var(--t4-dark), transparent 60%), #f8fafc; }
+  [data-theme="light"] h1 { color: var(--ink); }
+  [data-theme="light"] section.card { background: var(--card-bg); border-color: rgba(15,23,42,.12); box-shadow: 0 20px 50px rgba(15,23,42,.1); }
+  [data-theme="light"] .task-item { background: var(--item-bg); border-color: rgba(15,23,42,.1); }
+  [data-theme="light"] #tab-panel-1 { border-color: var(--t1-glow); }
+  [data-theme="light"] #tab-panel-2 { border-color: var(--t2-glow); }
+  [data-theme="light"] #tab-panel-3 { border-color: var(--t3-glow); }
+  [data-theme="light"] #tab-panel-4 { border-color: var(--t4-glow); }
+  [data-theme="light"] #tab-panel-1 button:hover:not(:disabled),
+  [data-theme="light"] #tab-panel-2 button:hover:not(:disabled),
+  [data-theme="light"] #tab-panel-3 button:hover:not(:disabled) { color: #fff; }
+  [data-theme="light"] #tab-panel-3 .swatch:hover:not(:disabled) { color: var(--muted); }
+  [data-theme="light"] .tab-btn { background: rgba(255,255,255,.6); border-color: rgba(15,23,42,.15); }
+  [data-theme="light"] .tab-btn:hover { color: var(--ink); border-color: rgba(15,23,42,.35); }
+  [data-theme="light"] .tab-btn.active-tab { color: #fff; border-color: transparent; }
+  [data-theme="light"] .old-element { color: #b91c1c; }
+  [data-theme="light"] select option { background: #fff; color: #0f172a; }
+  [data-theme="light"] .slider { background: rgba(15,23,42,.25); }
 </style>
 </head>
 <body class="mood-1">
@@ -277,6 +415,8 @@
 <div class="tabs">
   <button class="tab-btn active-tab" id="tab-btn-1" onclick="switchTab(1)">1-тапсырма</button>
   <button class="tab-btn" id="tab-btn-2" onclick="switchTab(2)">2-тапсырма</button>
+  <button class="tab-btn" id="tab-btn-3" onclick="switchTab(3)">3-тапсырма</button>
+  <button class="tab-btn" id="tab-btn-4" onclick="switchTab(4)">4-тапсырма</button>
 </div>
 
 <div class="wrap">
@@ -329,6 +469,65 @@
     </div>
   </section>
 
+  <!-- ================= TASK 3 ================= -->
+  <section class="card tab-panel" id="tab-panel-3">
+    <h2>3-тапсырма. Интерактивті кесте</h2>
+
+    <div class="task-item">
+      <div class="label">1) Кесте құру (жолдар мен бағандар санын енгізіңіз)</div>
+      <div class="controls-row">
+        <div class="field">
+          <label for="rows-input">Жолдар саны</label>
+          <input type="number" id="rows-input" min="1" max="20" value="4">
+        </div>
+        <div class="field">
+          <label for="cols-input">Бағандар саны</label>
+          <input type="number" id="cols-input" min="1" max="20" value="5">
+        </div>
+        <button onclick="task3_build()">Кестені құру</button>
+      </div>
+    </div>
+
+    <div class="task-item">
+      <div class="label">2) Түсті таңдаңыз, содан кейін ұяшықты басыңыз</div>
+      <div class="palette" id="palette"></div>
+      <div id="table-container"><div class="placeholder">Кесте әлі құрылмаған — жоғарыдағы түймені басыңыз</div></div>
+    </div>
+
+    <div class="task-item">
+      <div class="label">3) Белгілі бір түстегі ұяшықтар санын есептеу</div>
+      <div class="controls-row">
+        <div class="field">
+          <label for="count-color">Түс</label>
+          <select id="count-color"></select>
+        </div>
+        <button onclick="task3_count()">Санау</button>
+      </div>
+      <div class="result-box" id="count-result">Нәтиже осында көрсетіледі</div>
+    </div>
+  </section>
+
+  <!-- ================= TASK 4 ================= -->
+  <section class="card tab-panel" id="tab-panel-4">
+    <h2>4-тапсырма. Қараңғы тақырып (Dark theme)</h2>
+
+    <div class="task-item">
+      <div class="label">Тақырыпты ауыстыру</div>
+      <div class="switch-row">
+        <label class="switch">
+          <input type="checkbox" id="theme-switch" onchange="task4_toggleTheme()">
+          <span class="slider"></span>
+        </label>
+        <span id="theme-status">Қараңғы тақырып: қосулы</span>
+      </div>
+    </div>
+
+    <div class="task-item">
+      <div class="label">Көрсетілім</div>
+      <p style="margin:0;">Ауыстырғышты басқанда бүкіл беттің түс режимі өзгереді. Таңдау браузерде сақталады — бетті жаңартқанда да сақталып тұрады.</p>
+    </div>
+  </section>
+
   <!-- ON-PAGE CONSOLE (қосымша, көрнекілік үшін, екі табта да көрінеді) -->
   <section class="card">
     <h2>Консоль (браузердің DevTools консолін де ашып қараңыз — F12)</h2>
@@ -337,6 +536,9 @@
 
 </div>
 
+
+<!-- Жоғарғы оң бұрыштағы жылдам ауыстырғыш (4-тапсырмадағы ауыстырғышпен қатар жұмыс істейді) -->
+<button class="theme-fab" id="theme-fab" onclick="task4_toggleTheme()" title="Тақырыпты ауыстыру">☀️</button>
 
 <script>
 /* =========================================================
@@ -360,7 +562,7 @@ function switchTab(num) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
   document.getElementById('tab-panel-' + num).classList.add('active-panel');
   document.getElementById('tab-btn-' + num).classList.add('active-tab');
-  document.body.classList.remove('mood-1', 'mood-2');
+  document.body.classList.remove('mood-1', 'mood-2', 'mood-3', 'mood-4');
   document.body.classList.add('mood-' + num);
 }
 
@@ -473,6 +675,125 @@ function task2_logClasses(btn) {
   console.log('Барлық класс тізімі (массив):', classList);
   disableButtonAfterUse(btn);
 }
+
+/* =========================================================
+   TASK 3
+   ========================================================= */
+const PALETTE = [
+  { id: 'red',     name: 'Қызыл',   hex: '#ef4444' },
+  { id: 'green',   name: 'Жасыл',   hex: '#22c55e' },
+  { id: 'blue',    name: 'Көк',     hex: '#3b82f6' },
+  { id: 'yellow',  name: 'Сары',    hex: '#facc15' },
+  { id: 'purple',  name: 'Күлгін',  hex: '#a855f7' },
+  { id: 'default', name: 'Әдепкі',  hex: '' }
+];
+let selectedColor = PALETTE[0];
+
+// Палитра мен санау тізімін толтыру
+function task3_initPalette() {
+  const palette = document.getElementById('palette');
+  const select = document.getElementById('count-color');
+  PALETTE.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'swatch' + (c.id === selectedColor.id ? ' selected' : '');
+    b.title = c.name;
+    b.dataset.id = c.id;
+    if (c.hex) b.style.background = c.hex; else b.textContent = '∅';
+    b.addEventListener('click', () => {
+      selectedColor = c;
+      palette.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+      b.classList.add('selected');
+      logToScreen('Task3: таңдалған түс -> ' + c.name);
+    });
+    palette.appendChild(b);
+
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = c.name;
+    select.appendChild(opt);
+  });
+}
+
+// 1) Көрсетілген өлшемдегі кестені жасайтын функция
+function createTable(rows, cols) {
+  const table = document.createElement('table');
+  table.className = 'grid-table';
+  for (let r = 0; r < rows; r++) {
+    const tr = document.createElement('tr');
+    for (let c = 0; c < cols; c++) {
+      const td = document.createElement('td');
+      td.dataset.color = 'default';
+      tr.appendChild(td);
+    }
+    table.appendChild(tr);
+  }
+  return table;
+}
+
+function task3_build() {
+  const rows = parseInt(document.getElementById('rows-input').value, 10);
+  const cols = parseInt(document.getElementById('cols-input').value, 10);
+  if (!rows || !cols || rows < 1 || cols < 1 || rows > 20 || cols > 20) {
+    logToScreen('Task3: қате — жолдар мен бағандар саны 1-ден 20-ға дейін болуы керек');
+    return;
+  }
+  const container = document.getElementById('table-container');
+  container.innerHTML = '';
+  container.appendChild(createTable(rows, cols));
+  document.getElementById('count-result').textContent = 'Нәтиже осында көрсетіледі';
+  logToScreen('Task3: ' + rows + ' × ' + cols + ' кесте құрылды');
+}
+
+// 2) Ұяшықты басқанда фондық түс өзгереді (event delegation)
+document.getElementById('table-container').addEventListener('click', function (e) {
+  const td = e.target.closest('td');
+  if (!td) return;
+  td.style.backgroundColor = selectedColor.hex;
+  td.dataset.color = selectedColor.id;
+});
+
+// 3) Белгілі бір түстегі ұяшықтар санын есептейтін функция
+function countCellsByColor(colorId) {
+  return document.querySelectorAll('#table-container td[data-color="' + colorId + '"]').length;
+}
+
+function task3_count() {
+  if (!document.querySelector('#table-container table')) {
+    logToScreen('Task3: алдымен кестені құрыңыз');
+    document.getElementById('count-result').textContent = 'Алдымен кестені құрыңыз';
+    return;
+  }
+  const id = document.getElementById('count-color').value;
+  const name = PALETTE.find(c => c.id === id).name;
+  const n = countCellsByColor(id);
+  document.getElementById('count-result').textContent = '"' + name + '" түсті ұяшықтар саны: ' + n;
+  logToScreen('Task3: "' + name + '" түсті ұяшықтар саны -> ' + n);
+}
+
+task3_initPalette();
+
+/* =========================================================
+   TASK 4: Қараңғы тақырып
+   ========================================================= */
+function applyTheme(theme, silent) {
+  document.documentElement.setAttribute('data-theme', theme);
+  try { localStorage.setItem('theme', theme); } catch (e) {}
+  const isDark = theme === 'dark';
+  document.getElementById('theme-switch').checked = isDark;
+  document.getElementById('theme-status').textContent =
+    'Қараңғы тақырып: ' + (isDark ? 'қосулы' : 'өшірулі');
+  document.getElementById('theme-fab').textContent = isDark ? '☀️' : '🌙';
+  if (!silent) logToScreen('Task4: тақырып -> ' + (isDark ? 'қараңғы' : 'жарық'));
+}
+
+function task4_toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+let savedTheme = 'dark';
+try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+applyTheme(savedTheme, true);
 </script>
 
 </body>
