@@ -260,6 +260,25 @@
     transition: background .15s ease, transform .1s ease;
   }
   .grid-table td:hover { transform: scale(1.06); border-color: var(--accent); }
+  .error-box {
+    border-color: #ef4444 !important;
+    color: #ef4444;
+    font-weight: 600;
+  }
+  .count-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+  }
+  .count-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--cell-border);
+    flex-shrink: 0;
+  }
+  .count-row .count-num { margin-left: auto; font-weight: 700; }
   .result-box {
     margin-top: 10px;
     padding: 10px 12px;
@@ -418,6 +437,7 @@
         </div>
         <button onclick="task3_build()">Кестені құру</button>
       </div>
+      <div class="result-box error-box" id="build-error" style="display:none;"></div>
     </div>
 
     <div class="task-item">
@@ -427,15 +447,8 @@
     </div>
 
     <div class="task-item">
-      <div class="label">3) Белгілі бір түстегі ұяшықтар санын есептеу</div>
-      <div class="controls-row">
-        <div class="field">
-          <label for="count-color">Түс</label>
-          <select id="count-color"></select>
-        </div>
-        <button class="secondary" onclick="task3_count()">Санау</button>
-      </div>
-      <div class="result-box" id="count-result">Нәтиже осында көрсетіледі</div>
+      <div class="label">3) Әр түстегі ұяшықтар саны (автоматты түрде жаңарады)</div>
+      <div class="result-box" id="count-result">Кесте әлі құрылмаған</div>
     </div>
   </section>
 
@@ -613,7 +626,6 @@ let selectedColor = PALETTE[0];
 // Палитра мен санау тізімін толтыру
 function task3_initPalette() {
   const palette = document.getElementById('palette');
-  const select = document.getElementById('count-color');
   PALETTE.forEach(c => {
     const b = document.createElement('button');
     b.className = 'swatch' + (c.id === selectedColor.id ? ' selected' : '');
@@ -627,11 +639,6 @@ function task3_initPalette() {
       logToScreen('Task3: таңдалған түс -> ' + c.name);
     });
     palette.appendChild(b);
-
-    const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = c.name;
-    select.appendChild(opt);
   });
 }
 
@@ -654,14 +661,26 @@ function createTable(rows, cols) {
 function task3_build() {
   const rows = parseInt(document.getElementById('rows-input').value, 10);
   const cols = parseInt(document.getElementById('cols-input').value, 10);
-  if (!rows || !cols || rows < 1 || cols < 1 || rows > 20 || cols > 20) {
-    logToScreen('Task3: қате — жолдар мен бағандар саны 1-ден 20-ға дейін болуы керек');
+  const errBox = document.getElementById('build-error');
+  let error = '';
+  if (isNaN(rows) || isNaN(cols)) {
+    error = 'Қате: жолдар мен бағандар санын енгізіңіз';
+  } else if (rows <= 0 || cols <= 0) {
+    error = 'Қате: жолдар мен бағандар саны 0 немесе теріс сан болмауы керек (кемінде 1)';
+  } else if (rows > 20 || cols > 20) {
+    error = 'Қате: жолдар мен бағандар саны 20-дан аспауы керек';
+  }
+  if (error) {
+    errBox.textContent = error;
+    errBox.style.display = 'block';
+    logToScreen('Task3: ' + error);
     return;
   }
+  errBox.style.display = 'none';
   const container = document.getElementById('table-container');
   container.innerHTML = '';
   container.appendChild(createTable(rows, cols));
-  document.getElementById('count-result').textContent = 'Нәтиже осында көрсетіледі';
+  task3_updateCounts();
   logToScreen('Task3: ' + rows + ' × ' + cols + ' кесте құрылды');
 }
 
@@ -671,6 +690,7 @@ document.getElementById('table-container').addEventListener('click', function (e
   if (!td) return;
   td.style.backgroundColor = selectedColor.hex;
   td.dataset.color = selectedColor.id;
+  task3_updateCounts();
 });
 
 // 3) Белгілі бір түстегі ұяшықтар санын есептейтін функция
@@ -678,17 +698,28 @@ function countCellsByColor(colorId) {
   return document.querySelectorAll('#table-container td[data-color="' + colorId + '"]').length;
 }
 
-function task3_count() {
+// Барлық түстердің санын бірден көрсету (кесте өзгерген сайын жаңарады)
+function task3_updateCounts() {
+  const box = document.getElementById('count-result');
   if (!document.querySelector('#table-container table')) {
-    logToScreen('Task3: алдымен кестені құрыңыз');
-    document.getElementById('count-result').textContent = 'Алдымен кестені құрыңыз';
+    box.textContent = 'Кесте әлі құрылмаған';
     return;
   }
-  const id = document.getElementById('count-color').value;
-  const name = PALETTE.find(c => c.id === id).name;
-  const n = countCellsByColor(id);
-  document.getElementById('count-result').textContent = '"' + name + '" түсті ұяшықтар саны: ' + n;
-  logToScreen('Task3: "' + name + '" түсті ұяшықтар саны -> ' + n);
+  box.innerHTML = '';
+  PALETTE.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'count-row';
+    const dot = document.createElement('span');
+    dot.className = 'count-dot';
+    if (c.hex) dot.style.background = c.hex;
+    const name = document.createElement('span');
+    name.textContent = c.name;
+    const num = document.createElement('span');
+    num.className = 'count-num';
+    num.textContent = countCellsByColor(c.id);
+    row.append(dot, name, num);
+    box.appendChild(row);
+  });
 }
 
 task3_initPalette();
