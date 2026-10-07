@@ -686,7 +686,7 @@ function task3_build() {
 
 // 2) Ұяшықты басқанда фондық түс өзгереді (event delegation)
 document.getElementById('table-container').addEventListener('click', function (e) {
-  const td = e.target.closest('td');
+       td = e.target.closest('td');
   if (!td) return;
   td.style.backgroundColor = selectedColor.hex;
   td.dataset.color = selectedColor.id;
